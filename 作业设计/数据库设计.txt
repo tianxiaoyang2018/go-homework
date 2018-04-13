@@ -1,0 +1,92 @@
+user表
+id
+name
+type
+createTime
+
+relationship表
+id
+user_id1
+user_id2
+state 1 liked 2 disliked 3 matched 4 over
+type
+createTime
+
+dictionary表
+id
+colname
+value
+remark
+createTime
+
+
+2天内活跃用户1000w 每个用户10w次滑动  
+1 000 000 000 000条数据
+对2取对数 40 建立索引之后 查询一条数据只用40次
+存储空间 按1条4字节算 4T空间，一主二从 12T
+
+算上不活跃用户，乘以10倍，120T  查询索引44次也够了
+
+同一时间假设10w用户都查关系列表，10w*44=440w，CPU的速度够了
+
+
+
+
+drop table if exists t_user;
+create table t_user
+(
+	id  SERIAL PRIMARY KEY ,
+	name character varying(128) not null UNIQUE,
+	type character varying(128) ,
+	create_time timestamp with time zone not null default now() ,
+	last_update_time timestamp with time zone not null default now()
+);
+comment on table t_user is '用户表';
+comment on column t_user.name is '用户名称';
+comment on column t_user.type is '用户类型';
+comment on column t_user.create_time is '创建时间';
+comment on column t_user.last_update_time is '最后修改时间';
+
+
+insert into t_user(name,type) values
+('王一','user'),
+('王二','user');
+
+
+drop table if exists t_relationship;
+create table t_relationship
+(
+	id SERIAL PRIMARY KEY ,
+    user_id1 int not null,
+	user_id2 int not null,
+	state character varying(128) not null,
+	type character varying(128) not null,
+	create_time timestamp with time zone not null default now(),
+	last_update_time timestamp with time zone not null default now()
+);
+alter table t_relationship add constraint relationship_unique_userId1_2 unique (user_id1, user_id2);
+
+alter table t_relationship add constraint fk_user_id1 foreign key (user_id1) references t_user(id); 
+alter table t_relationship add constraint fk_user_id2 foreign key (user_id2) references t_user(id);
+
+create index relationship_user_id1_index on t_relationship(user_id1);
+create index relationship_user_id2_index on t_relationship(user_id2);
+
+insert into t_relationship(user_id1, user_id2, state, type) values
+(1,2,'liked', 'relationship');
+
+
+drop table if exists t_dictionary;
+create table t_dictionary
+(
+	id SERIAL PRIMARY KEY ,
+	colname character varying(128) not null,
+	value smallint not null ,
+	remark character varying(128) not null,
+	create_time timestamp with time zone not null default now()
+);
+insert into t_dictionary(colname, value, remark) values
+('relationshipState', 1, 'liked'),
+('relationshipState', 2, 'disliked'),
+('relationshipState', 3, 'matched'),
+('relationshipState', 4, 'over');

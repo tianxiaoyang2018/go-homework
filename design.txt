@@ -1,0 +1,46 @@
+1、database 
+
+drop table if exists t_user;
+create table t_user
+(
+	id  SERIAL PRIMARY KEY ,
+	name character varying(128) not null UNIQUE,
+	type character varying(128) ,
+	create_time timestamp with time zone not null default now() ,
+	last_update_time timestamp with time zone not null default now()
+);
+
+
+insert into t_user(name,type) values
+('王一','user'),
+('王二','user');
+
+
+drop table if exists t_relationship;
+create table t_relationship
+(
+	id SERIAL PRIMARY KEY ,
+    user_id1 int not null,
+	user_id2 int not null,
+	state character varying(128) not null,
+	type character varying(128) not null,
+	create_time timestamp with time zone not null default now(),
+	last_update_time timestamp with time zone not null default now()
+);
+alter table t_relationship add constraint relationship_unique_userId1_2 unique (user_id1, user_id2);
+
+alter table t_relationship add constraint fk_user_id1 foreign key (user_id1) references t_user(id); 
+alter table t_relationship add constraint fk_user_id2 foreign key (user_id2) references t_user(id);
+
+create index relationship_user_id1_index on t_relationship(user_id1);
+create index relationship_user_id2_index on t_relationship(user_id2);
+
+insert into t_relationship(user_id1, user_id2, state, type) values
+(1,2,'liked', 'relationship');
+
+2、project struct instruction
+  1) package main: The entrance of the project. Registing controllers , server host and port.
+  2) package controller: Receive and handle requests from client and return data.
+  3) package dao: Connect and operate pgsql
+  4) package bean: Define some entities used for storing data searched from pgsql
+      
