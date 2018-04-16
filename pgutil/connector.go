@@ -19,6 +19,7 @@ func createDB() {
 
 func GetDB() *sql.DB {
 	if db == nil {
+		// 判断db为空的线程进来，可能进来了多个线程，只有一个能获取到锁，其他被阻塞到该方法执行完，然而也不会再调用此方法了
 		once.Do(createDB)
 	}
 	return db
