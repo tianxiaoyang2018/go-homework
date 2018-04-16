@@ -3,8 +3,10 @@ package main
 import "controller"
 import "log"
 import "net/http"
+import "fmt"
 
 func main() {
+	fmt.Println("start...")
 	// regist controller
 	controller.RegistTUserController()
 	controller.RegistRelationshipController()
