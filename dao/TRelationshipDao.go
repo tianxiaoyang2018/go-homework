@@ -1,7 +1,7 @@
 package dao
 
-import "pgutil"
-import "bean"
+import "github.com/tianxiaoyang2018/go-homework/pgutil"
+import "github.com/tianxiaoyang2018/go-homework/bean"
 import "fmt"
 
 /**

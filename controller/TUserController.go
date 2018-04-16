@@ -1,11 +1,12 @@
 package controller
 
 import (
-	"bean"
-	"dao"
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/tianxiaoyang2018/go-homework/bean"
+	"github.com/tianxiaoyang2018/go-homework/dao"
 
 	"github.com/gorilla/mux"
 )

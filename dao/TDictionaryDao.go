@@ -1,6 +1,6 @@
 package dao
 
-import "pgutil"
+import "github.com/tianxiaoyang2018/go-homework/pgutil"
 
 var hashMap map[string]map[int]string = make(map[string]map[int]string)
 
