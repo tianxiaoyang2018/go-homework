@@ -8,7 +8,7 @@ import "fmt"
  * get relationships by userId
  */
 func ListRelationship(userId int) []bean.RelationshipCoreInfo {
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 
 	stmt, err := con.Prepare("select user_id2, state, type from t_relationship where user_id1 = $1")
 	pgutil.CheckErr(err)
@@ -26,13 +26,11 @@ func ListRelationship(userId int) []bean.RelationshipCoreInfo {
 		relationships = append(relationships, bean.RelationshipCoreInfo{UserId: userId, State: state, RelationshipType: relationshipType})
 	}
 
-	pgutil.PgClose(con)
-
 	return relationships
 }
 
 func GetRelationshipByUserIdAndOtherUserId(userId int, otherUserId int) *bean.RelationshipCoreInfo {
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 	stmt, err := con.Prepare("select user_id2, state, type from t_relationship where user_id1 = $1 and user_id2 = $2")
 	pgutil.CheckErr(err)
 	rows, err := stmt.Query(userId, otherUserId)
@@ -49,8 +47,6 @@ func GetRelationshipByUserIdAndOtherUserId(userId int, otherUserId int) *bean.Re
 
 	}
 
-	pgutil.PgClose(con)
-
 	return relationship
 }
 
@@ -65,7 +61,7 @@ func UpdateRelationship(userId int, otherUserId int, state string) {
 	relationship1 := GetRelationshipByUserIdAndOtherUserId(userId, otherUserId)
 
 	fmt.Println("relationship1=", relationship1)
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 
 	if relationship1 == nil {
 		stmt, err := con.Prepare("insert into t_relationship(user_id1, user_id2, state, type) values($1,$2,$3,'relationship')")
@@ -80,5 +76,4 @@ func UpdateRelationship(userId int, otherUserId int, state string) {
 		pgutil.CheckErr(err)
 		stmt.Exec(userId, otherUserId)
 	}
-	pgutil.PgClose(con)
 }

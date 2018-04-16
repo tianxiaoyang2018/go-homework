@@ -5,7 +5,7 @@ import "pgutil"
 var hashMap map[string]map[int]string = make(map[string]map[int]string)
 
 func initDictionaryMap() {
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 	rows, err := con.Query("SELECT colname,value,remark FROM t_dictionary")
 	pgutil.CheckErr(err)
 
@@ -24,8 +24,6 @@ func initDictionaryMap() {
 		innerHashMap[value] = remark
 
 	}
-
-	pgutil.PgClose(con)
 
 }
 

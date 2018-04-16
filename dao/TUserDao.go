@@ -6,7 +6,7 @@ import "fmt"
 
 func ListUser() []bean.UserCoreInfo {
 
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 
 	rows, err := con.Query("SELECT id,name,type FROM t_user")
 	pgutil.CheckErr(err)
@@ -22,12 +22,11 @@ func ListUser() []bean.UserCoreInfo {
 		users = append(users, bean.UserCoreInfo{Id: id, Name: name, UserType: userType})
 	}
 
-	pgutil.PgClose(con)
 	return users
 }
 
 func GetTUser(id int) bean.UserCoreInfo {
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 
 	stmt, err := con.Prepare("select id, name, type from t_user where id = $1")
 	rows, err := stmt.Query(id)
@@ -46,7 +45,7 @@ func GetTUser(id int) bean.UserCoreInfo {
 }
 
 func GetTUserByName(name string) bean.UserCoreInfo {
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 
 	stmt, err := con.Prepare("select id, name, type from t_user where name = $1")
 	rows, err := stmt.Query(name)
@@ -64,7 +63,7 @@ func GetTUserByName(name string) bean.UserCoreInfo {
 }
 
 func InsertUser(user bean.UserCoreInfo) {
-	con := pgutil.PgConnect()
+	con := pgutil.GetDB()
 
 	stmt, err := con.Prepare("INSERT INTO t_user(name, type) VALUES($1, 'user')")
 	pgutil.CheckErr(err)
@@ -72,7 +71,5 @@ func InsertUser(user bean.UserCoreInfo) {
 	stmt.Exec(user.Name)
 
 	pgutil.CheckErr(err)
-
-	pgutil.PgClose(con)
 
 }
