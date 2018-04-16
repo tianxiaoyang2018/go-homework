@@ -1,8 +1,11 @@
 package main
 
-import "github.com/tianxiaoyang2018/go-homework/controller"
-import "log"
-import "net/http"
+import (
+	"log"
+	"net/http"
+
+	"github.com/tianxiaoyang2018/go-homework/controller"
+)
 
 func main() {
 	// regist controller

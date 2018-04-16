@@ -1,8 +1,11 @@
 package dao
 
-import "github.com/tianxiaoyang2018/go-homework/bean"
-import "github.com/tianxiaoyang2018/go-homework/pgutil"
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/tianxiaoyang2018/go-homework/bean"
+	"github.com/tianxiaoyang2018/go-homework/pgutil"
+)
 
 func ListUser() []bean.UserCoreInfo {
 
