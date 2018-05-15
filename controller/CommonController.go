@@ -1,12 +1,18 @@
 package controller
 
-import "github.com/gorilla/mux"
+import (
+	"sync"
+
+	"github.com/gorilla/mux"
+)
 
 var router *mux.Router
 
+var once sync.Once
+
 func GetRouter() *mux.Router {
-	if router == nil {
+	once.Do(func() {
 		router = mux.NewRouter()
-	}
+	})
 	return router
 }
